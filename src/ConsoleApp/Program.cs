@@ -25,10 +25,13 @@ var content = new StringBuilder();
 
 while (true)
 {
-    Console.Write(">>>");
+    Console.ForegroundColor = ConsoleColor.Green;
+    Console.Write("You:");
     chatHistory.AddUserMessage(Console.ReadLine()!);
 
     content.Clear();
+    Console.ResetColor();
+    Console.Write("Assistant:");
     await foreach (var message in chatService.GetStreamingChatMessageContentsAsync(chatHistory, executionSettings, kernel))
     {
         Console.Write(message);
@@ -36,8 +39,6 @@ while (true)
     }
 
     Console.WriteLine();
-
     chatHistory.AddAssistantMessage(content.ToString());
-
     Console.WriteLine();
 }
