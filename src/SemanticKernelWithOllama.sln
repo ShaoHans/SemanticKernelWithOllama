@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "S02.CustomHttpClientHandler
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{4D4FBE55-AF3F-4958-8C3B-863359898A16}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "S03.TextEmbedding", "S03.TextEmbedding\S03.TextEmbedding.csproj", "{5A1017AA-FB22-45EA-96A9-E7F73387E890}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{4D4FBE55-AF3F-4958-8C3B-863359898A16}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D4FBE55-AF3F-4958-8C3B-863359898A16}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D4FBE55-AF3F-4958-8C3B-863359898A16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A1017AA-FB22-45EA-96A9-E7F73387E890}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A1017AA-FB22-45EA-96A9-E7F73387E890}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A1017AA-FB22-45EA-96A9-E7F73387E890}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A1017AA-FB22-45EA-96A9-E7F73387E890}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
