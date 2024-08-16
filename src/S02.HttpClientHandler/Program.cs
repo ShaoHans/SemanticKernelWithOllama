@@ -3,8 +3,6 @@ using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 
-using S02.CustomHttpClientHandler;
-
 using System.Text;
 
 var kernel = Kernel.CreateBuilder()

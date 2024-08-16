@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "S01.Basic", "S01.Basic\S01.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "S02.CustomHttpClientHandler", "S02.HttpClientHandler\S02.CustomHttpClientHandler.csproj", "{8397ECB1-F134-4B53-B735-4A5FF51DE2DA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{4D4FBE55-AF3F-4958-8C3B-863359898A16}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{8397ECB1-F134-4B53-B735-4A5FF51DE2DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8397ECB1-F134-4B53-B735-4A5FF51DE2DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8397ECB1-F134-4B53-B735-4A5FF51DE2DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D4FBE55-AF3F-4958-8C3B-863359898A16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D4FBE55-AF3F-4958-8C3B-863359898A16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D4FBE55-AF3F-4958-8C3B-863359898A16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D4FBE55-AF3F-4958-8C3B-863359898A16}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

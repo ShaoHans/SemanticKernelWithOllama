@@ -1,5 +1,5 @@
 ﻿
-namespace S02.CustomHttpClientHandler;
+namespace Common;
 
 public sealed class OllamaHttpClientHandler : HttpClientHandler
 {
