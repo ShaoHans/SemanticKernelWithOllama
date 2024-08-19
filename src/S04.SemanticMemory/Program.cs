@@ -48,9 +48,9 @@ async Task SearchMemoryAsync(ISemanticTextMemory memory, string query)
 async Task StoreMemoryAsync(ISemanticTextMemory memory)
 {
     Console.WriteLine("\n添加.Net各类框架的官方学习文档...");
-    var githubFiles = SampleData();
+    var docs = SampleData();
     var i = 0;
-    foreach (var entry in githubFiles)
+    foreach (var entry in docs)
     {
         await memory.SaveReferenceAsync(
             collection: MemoryCollectionName,
