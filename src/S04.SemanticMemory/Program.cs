@@ -10,6 +10,8 @@ const string MemoryCollectionName = "DotNetDoc";
 // 使用sqlite
 var store = await SqliteMemoryStore.ConnectAsync(Path.Combine(Directory.GetCurrentDirectory(), "DotNetDoc.db"));
 
+// 先下载模型：ollama pull nomic-embed-text
+
 var memory = new MemoryBuilder()
     .WithOllamaTextEmbeddingGeneration("nomic-embed-text")
     .WithMemoryStore(store)
