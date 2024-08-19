@@ -1,52 +1,29 @@
 ﻿
+using Microsoft.SemanticKernel.Connectors.Sqlite;
 using Microsoft.SemanticKernel.Memory;
 
-const string MemoryCollectionName = "SKGitHub";
+const string MemoryCollectionName = "DotNetDoc";
 
-var memoryDb = new MemoryBuilder()
+// 使用内存
+//var store = new VolatileMemoryStore();
+
+// 使用sqlite
+var store = await SqliteMemoryStore.ConnectAsync(Path.Combine(Directory.GetCurrentDirectory(), "DotNetDoc.db"));
+
+var memory = new MemoryBuilder()
     .WithOllamaTextEmbeddingGeneration("nomic-embed-text")
-    .WithMemoryStore(new VolatileMemoryStore())
+    .WithMemoryStore(store)
     .Build();
 
-await RunExampleAsync(memoryDb);
+await RunExampleAsync(memory);
 
 async Task RunExampleAsync(ISemanticTextMemory memory)
 {
     await StoreMemoryAsync(memory);
 
-    await SearchMemoryAsync(memory, "How do I get started?");
+    await SearchMemoryAsync(memory, "如何开发AI程序?");
 
-    /*
-    Output:
-
-    Query: How do I get started?
-
-    Result 1:
-      URL:     : https://github.com/microsoft/semantic-kernel/blob/main/README.md
-      Title    : README: Installation, getting started, and how to contribute
-
-    Result 2:
-      URL:     : https://github.com/microsoft/semantic-kernel/blob/main/samples/dotnet-jupyter-notebooks/00-getting-started.ipynb
-      Title    : Jupyter notebook describing how to get started with the Semantic Kernel
-
-    */
-
-    await SearchMemoryAsync(memory, "Can I build a chat with SK?");
-
-    /*
-    Output:
-
-    Query: Can I build a chat with SK?
-
-    Result 1:
-      URL:     : https://github.com/microsoft/semantic-kernel/tree/main/prompt_template_samples/ChatPlugin/ChatGPT
-      Title    : Sample demonstrating how to create a chat plugin interfacing with ChatGPT
-
-    Result 2:
-      URL:     : https://github.com/microsoft/semantic-kernel/blob/main/samples/apps/chat-summary-webapp-react/README.md
-      Title    : README: README associated with a sample chat summary react-based webapp
-
-    */
+    await SearchMemoryAsync(memory, "如何构建WebApi服务端应用?");
 }
 
 async Task SearchMemoryAsync(ISemanticTextMemory memory, string query)
@@ -70,15 +47,7 @@ async Task SearchMemoryAsync(ISemanticTextMemory memory, string query)
 
 async Task StoreMemoryAsync(ISemanticTextMemory memory)
 {
-    /* Store some data in the semantic memory.
-     *
-     * When using Azure AI Search the data is automatically indexed on write.
-     *
-     * When using the combination of VolatileStore and Embedding generation, SK takes
-     * care of creating and storing the index
-     */
-
-    Console.WriteLine("\nAdding some GitHub file URLs and their descriptions to the semantic memory.");
+    Console.WriteLine("\n添加.Net各类框架的官方学习文档...");
     var githubFiles = SampleData();
     var i = 0;
     foreach (var entry in githubFiles)
@@ -100,15 +69,15 @@ static Dictionary<string, string> SampleData()
 {
     return new Dictionary<string, string>
     {
-        ["https://github.com/microsoft/semantic-kernel/blob/main/README.md"]
-            = "README: Installation, getting started, and how to contribute",
-        ["https://github.com/microsoft/semantic-kernel/blob/main/dotnet/notebooks/02-running-prompts-from-file.ipynb"]
-            = "Jupyter notebook describing how to pass prompts from a file to a semantic plugin or function",
-        ["https://github.com/microsoft/semantic-kernel/blob/main/dotnet/notebooks/00-getting-started.ipynb"]
-            = "Jupyter notebook describing how to get started with the Semantic Kernel",
-        ["https://github.com/microsoft/semantic-kernel/tree/main/prompt_template_samples/ChatPlugin/ChatGPT"]
-            = "Sample demonstrating how to create a chat plugin interfacing with ChatGPT",
-        ["https://github.com/microsoft/semantic-kernel/blob/main/dotnet/src/Plugins/Plugins.Memory/VolatileMemoryStore.cs"]
-            = "C# class that defines a volatile embedding store",
+        ["https://learn.microsoft.com/zh-cn/aspnet/core/?view=aspnetcore-8.0"]
+            = "了解如何使用 ASP.NET Core 创建快速、安全、跨平台和基于云的 Web 应用和服务。 浏览教程、示例代码、基础知识、API 参考和更多内容。",
+        ["https://learn.microsoft.com/zh-cn/dotnet/maui/?view=net-maui-8.0"]
+            = "通过 .NET 多平台应用 UI (.NET MAUI)，可使用 .NET 跨平台 UI 工具包生成各种原生应用，这一工具包可适应 Android、iOS、macOS、Windows 和 Tizen 系统上的移动端和桌面端应用的形态。",
+        ["https://learn.microsoft.com/zh-cn/dotnet/desktop/wpf/?view=netdesktop-8.0"]
+            = "了解如何在 .NET 8 上使用 Windows Presentation Foundation (WPF)，这是一种适用于 Windows 的开放源代码图形用户界面。",
+        ["https://learn.microsoft.com/zh-cn/dotnet/aspire/"]
+            = "了解 .NET Aspire，这是一个自以为是的云就绪堆栈，用于构建可观察、生产就绪的分布式应用程序。浏览 API 参考、示例代码、教程、快速入门、概念文章等。",
+        ["https://learn.microsoft.com/zh-cn/dotnet/ai/"]
+            = "了解如何将 AI 与 .NET 配合使用。 浏览示例代码、教程、快速入门、概念文章等。",
     };
 }
