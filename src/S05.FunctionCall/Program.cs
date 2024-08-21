@@ -5,6 +5,7 @@ using Microsoft.SemanticKernel.Connectors.OpenAI;
 
 using S05.FunctionCall;
 
+using System;
 using System.Runtime.Serialization;
 using System.Text;
 
@@ -25,7 +26,7 @@ var executionSettings = new OpenAIPromptExecutionSettings
 
 var chatService = kernel.GetRequiredService<IChatCompletionService>();
 var chatHistory = new ChatHistory("你是一位资深.Net开发人员，精通各种.Net框架");
-var content = new StringBuilder();
+//var content = new StringBuilder();
 
 while (true)
 {
@@ -33,40 +34,31 @@ while (true)
     Console.Write("You:");
     chatHistory.AddUserMessage(Console.ReadLine()!);
 
-    content.Clear();
+    //content.Clear();
     Console.ResetColor();
     Console.Write("Assistant:");
 
-    AuthorRole? authorRole = null;
-    var fccBuilder = new FunctionCallContentBuilder();
-
     var result = await chatService.GetChatMessageContentAsync(chatHistory, executionSettings, kernel);
-    if(result != null)
+    if (result.Content is not null)
     {
-        Console.Write(result);
-        content.Append(result.Content);
-        authorRole ??= result.Role;
+        Console.Write(result.Content);
+        //content.Append(result.Content);
+        chatHistory.Add(result);
     }
-
-    var functionCalls = fccBuilder.Build();
-    if (functionCalls.Any())
+    else
     {
-        var fcContent = new ChatMessageContent(role: authorRole ?? default, content: null);
-        chatHistory.Add(fcContent);
+        var functionCalls = FunctionCallContent.GetFunctionCalls(result);
+        if (!functionCalls.Any())
+        {
+            break;
+        }
 
-        // Iterating over the requested function calls and invoking them
         foreach (var functionCall in functionCalls)
         {
-            fcContent.Items.Add(functionCall);
-
-            var functionResult = await functionCall.InvokeAsync(kernel);
-
-            chatHistory.Add(functionResult.ToChatMessage());
-            Console.Write(functionResult.ToChatMessage());
+            var resultContent = await functionCall.InvokeAsync(kernel);
+            chatHistory.Add(resultContent.ToChatMessage());
         }
     }
-
-    Console.WriteLine();
-    chatHistory.AddAssistantMessage(content.ToString());
+    
     Console.WriteLine();
 }
