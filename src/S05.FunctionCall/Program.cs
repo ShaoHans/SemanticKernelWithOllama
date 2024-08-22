@@ -1,5 +1,4 @@
-﻿
-using Microsoft.SemanticKernel;
+﻿using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 
@@ -9,6 +8,7 @@ using S05.FunctionCall;
 
 var kernel = Kernel.CreateBuilder()
                 .AddOllamaChatCompletion("llama3.1")
+                //.AddOllamaChatCompletion("mistral")
                 .Build();
 
 kernel.Plugins.AddFromType<TimePlugin>();
@@ -19,38 +19,27 @@ var executionSettings = new OpenAIPromptExecutionSettings
     ToolCallBehavior = ToolCallBehavior.EnableKernelFunctions
 };
 
-
 var chatService = kernel.GetRequiredService<IChatCompletionService>();
-var chatHistory = new ChatHistory("你是一位资深.Net开发人员，精通各种.Net框架");
+var chatHistory = new ChatHistory("你是一位优秀的生活助理，会回答我提出的问题，同时可能会使用一些插件来协助回答问题");
+chatHistory.AddUserMessage("现在时间是多少");
 
-while (true)
+// ollmam暂不支持streaming tools call, https://ollama.com/blog/tool-support
+var messageContent = await chatService.GetChatMessageContentAsync(chatHistory, executionSettings, kernel);
+
+var functionCalls = FunctionCallContent.GetFunctionCalls(messageContent).ToArray();
+
+while (functionCalls.Length != 0)
 {
-    Console.ForegroundColor = ConsoleColor.Green;
-    Console.Write("You:");
-    chatHistory.AddUserMessage(Console.ReadLine()!);
+    chatHistory.Add(messageContent);
 
-    Console.ResetColor();
-    Console.Write("Assistant:");
+    foreach (var functionCall in functionCalls)
+    {
+        var r = await functionCall.InvokeAsync(kernel);
 
-    var result = await chatService.GetChatMessageContentAsync(chatHistory, executionSettings, kernel);
-    if (result.Content is not null)
-    {
-        Console.Write(result.Content);
-        chatHistory.Add(result);
+        chatHistory.Add(r.ToChatMessage());
     }
-    else
-    {
-        var functionCalls = FunctionCallContent.GetFunctionCalls(result);
-        if (functionCalls.Any())
-        {
-            foreach (var functionCall in functionCalls)
-            {
-                var functionContent = await functionCall.InvokeAsync(kernel);
-                Console.Write(functionContent.InnerContent);
-                chatHistory.Add(functionContent.ToChatMessage());
-            }
-        }
-    }
-    
-    Console.WriteLine();
+
+    messageContent = await chatService.GetChatMessageContentAsync(chatHistory, executionSettings, kernel);
+    functionCalls = FunctionCallContent.GetFunctionCalls(messageContent).ToArray();
+    Console.WriteLine(messageContent);
 }
